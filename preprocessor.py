@@ -3,24 +3,22 @@ import re
 import typing
 
 from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer, WordNetLemmatizer
-from nltk.tokenize import word_tokenize
+from pymorphy2 import MorphAnalyzer
 
 
 class Preprocessor:
     def __init__(self):
-        self._stopwords = set(stopwords.words("russian"))
-        self._lemmatizer = WordNetLemmatizer()
-        self._stemmer = PorterStemmer()
+        self._stopwords = set(stopwords.words("russian")) | {
+            "сегодня",
+            "это",
+            "вверх",
+            "вниз",
+        }
+        self._morph = MorphAnalyzer()
 
     def _lemmatize(self, text: str) -> str:
         """Lemmatizes text"""
-        return " ".join(
-            [
-                self._lemmatizer.lemmatize(self._stemmer.stem(w))
-                for w in word_tokenize(text)
-            ]
-        )
+        return " ".join([self._morph.normal_forms(w)[0] for w in text.split()])
 
     @staticmethod
     def _keep_only_letters(text: str) -> str:
