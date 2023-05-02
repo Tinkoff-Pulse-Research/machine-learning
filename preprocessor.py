@@ -26,6 +26,11 @@ class Preprocessor:
         return re.sub(r"[^a-zA-Zа-яА-Я ]", "", text)
 
     @staticmethod
+    def _remove_hashtags(text: str) -> str:
+        """Removes hashtags"""
+        return re.sub(r"\#[0-9a-fа-я_]+", "", text)
+
+    @staticmethod
     def _remove_roman(text: str) -> str:
         """Removes roman digits"""
         return re.sub(r"\b[xvi]+\b", "", text)
@@ -70,9 +75,13 @@ class Preprocessor:
                 self._normalize_whitespaces(
                     self._remove_roman(
                         self._keep_only_letters(
-                            self._remove_links(
-                                self._remove_mentions(
-                                    self._remove_tickers(text.lower().replace("ё", "е"))
+                            self._remove_hashtags(
+                                self._remove_links(
+                                    self._remove_mentions(
+                                        self._remove_tickers(
+                                            text.lower().replace("ё", "е")
+                                        )
+                                    )
                                 )
                             )
                         )
