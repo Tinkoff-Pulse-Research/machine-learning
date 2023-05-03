@@ -13,6 +13,10 @@ class Preprocessor:
             "это",
             "вверх",
             "вниз",
+            "р",
+            "деньги",
+            "купить",
+            "продать",
         }
         self._morph = MorphAnalyzer()
 
@@ -23,7 +27,13 @@ class Preprocessor:
     @staticmethod
     def _keep_only_letters(text: str) -> str:
         """Removes everything except of latin and cyrillic letters"""
-        return re.sub(r"[^a-zA-Zа-яА-Я ]", "", text)
+        return re.sub(
+            r"[^a-zA-Zа-яА-Я ]",
+            "",
+            re.sub(
+                r"[!\"\#\$%\&'\(\)\*\+,\-\./:;<=>\?@\[\\\]\^_`\{\|\}\~]+", " ", text
+            ),
+        )
 
     @staticmethod
     def _remove_hashtags(text: str) -> str:
